@@ -1,14 +1,21 @@
-import json
+import requests
 
-data = None
-with open("out.json", "r") as f:
-    data = json.load(f)
+# The URL to send the GET request to
+url = "https://www.hellofresh.com/gw/recipes/recipes/search?author=gourmet&country=US&locale=en-US&skip=1&sort=-date&take=400"
 
-print(data.keys())
-items = data['items']
-print(len(items))
-for i in items:
-    print(i['cardLink'])
+# HTTP headers for Authorization
+headers = {
+    "authorization": ""
+}
 
-data['items'] = []
-print(data)
+# Sending the GET request
+response = requests.get(url, headers=headers)
+
+# Checking if the request was successful
+if response.status_code == 200:
+    data = response.text
+    with open("out.json", "w") as f:
+        f.write(data)
+        f.close()
+else:
+    print("Failed:", response.status_code, response.text)
